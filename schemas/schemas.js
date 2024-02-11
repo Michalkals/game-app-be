@@ -1,12 +1,14 @@
 const signupSchema = {
     type: "object",
     properties: {
-      name: { type: "string" },
+      nickname: { type: "string" },
+      firstName: { type: "string" },
+      lastName: { type: "string" },
       email: { type: "string" },
       password: { type: "string" },
       rePassword: { type: "string" },
     },
-    required: ["name", "email", "password", "rePassword"],
+    required: ["firstName","lastName", "email", "password", "rePassword"],
     additionalProperties: false
   }
   
