@@ -1,5 +1,5 @@
 const User = require("../models/User");
-const { addUser } = require("../models/usersModel");
+const { addUser, getAllUsers } = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
 const { comparePassword } = require("../libs/utilities");
 require("dotenv").config();
@@ -74,9 +74,28 @@ const signup = async (req, res) => {
   }
 };
 
+const users = async (req, res) => {
+  try {
+    const allUsers = await getAllUsers();
+    res.send(allUsers)
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const gamesPlayed = async (req, res) => {
+  try {
+    const addGame = await addToGamesPlayed();
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   login,
   checkStatus,
   logout,
   signup,
+  users,
+  gamesPlayed
 };

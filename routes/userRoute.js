@@ -13,6 +13,8 @@ router.get("/log-out", userController.logout);
 
 router.get("/check-status", auth, userController.checkStatus);
 
+router.get("/all-users", userController.users)
+
 router.post(
   "/signup",
   validateBody(signupSchema),
@@ -26,5 +28,11 @@ router.post(
   validateBody(loginSchema),
   userController.login
 );
+
+router.post(
+  "/add-to-games-played",
+  auth,
+  userController.gamesPlayed
+)
 
 module.exports = router;
