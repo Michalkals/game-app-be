@@ -1,69 +1,82 @@
 const User = require("../models/User");
-const { addUserModel } = require('../models/usersModel')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-require('dotenv').config()
+const { addUser } = require("../models/usersModel");
+const jwt = require("jsonwebtoken");
+const { comparePassword } = require("../libs/utilities");
+require("dotenv").config();
 
-
-const fetchUser = async (req, res) => {
-    try{
-      bcrypt.compare(req.body.password, req.body.user.password, (err, result)=>{
-        if(!result){
-          return res.status(400).send('Incorrect password')
-        } 
-        if(err){
-          return res.status(500).send(err)
-        }
-        if(result){
-          const token = jwt.sign({ _id: req.body.user._id, name: req.body.user.name}, process.env.TOKEN_SECRET_KEY, { expiresIn: "30d" })
-          const user = req.body.user
-          user.password= 'secret'
-          // res.cookie( 'token', token, {maxAge: 30*24*60*60*1000, httpsOnly: true, sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-          // secure: process.env.NODE_ENV === "production" ? true : false,})
-          res.cookie( 'token', token, {maxAge: 30*24*60*60*1000, httpsOnly: true})
-          res.send(user)
-        }
-      })
-    } catch (err) {
-      res.status(500).send(err.message, "user not found");
+const login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      const err = new Error("User doesn't exist");
+      err.statusCode = 401;
+      return next(err);
+      // return res.status(401).json({ success: false, msg: "could not find user" });
     }
-  }
+    const isValid = await comparePassword(req.body.password, user.password);
 
-  const checkStatus = async (req, res) => {
-    try{
-      const user = await User.getUser(req.body.userId)
-      
-      res.send({ok:true, ...user});
-    } catch (err) {
-      res.status(500).send(err.message);
+    if (isValid) {
+      const tokenObject = jwt.sign(
+        { _id: user._id },
+        process.env.TOKEN_SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+      // issueJWT(user);
+      res.cookie("token", tokenObject, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      });
+      res.status(200).send({ ok: true, user: user }); // .json({ success: true, user:user, token: tokenObject.token, expiresIn: tokenObject.expires });
+    } else {
+      const err = new Error("Incorrect password");
+      err.statusCode = 401;
+      return next(err);
+      // res.status(401).json({ success: false, msg: "you entered the wrong password" });
     }
+  } catch (error) {
+    console.log(error);
+    const err = new Error(error);
+    err.statusCode = 500;
+    next(err);
   }
+};
 
-  const logout = (req, res) => {
-    try{
-      const {token} =req.cookies;
-      if(token){
-        res.clearCookie('token')
-      }
-      res.send({ok:true})
-    } catch (err) {
-      res.status(500).send(err.message);
+const checkStatus = async (req, res) => {
+  try {
+    const user = await User.getUser(req.body.userId);
+
+    res.send({ ok: true, ...user });
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+
+const logout = (req, res) => {
+  try {
+    const { token } = req.cookies;
+    if (token) {
+      res.clearCookie("token");
     }
+    res.send({ ok: true });
+  } catch (err) {
+    res.status(500).send(err.message);
   }
+};
 
-  const signup = async (req, res) => {
-    try {
-      const user = await addUserModel(req.body)
-      res.send({ ok: true });
-    } catch (err) {
-      res.status(500).send(err.message)
-    }
+const signup = async (req, res) => {
+  try {
+    await addUser(req.body);
+    res.send(req.body);
+  } catch (error) {
+    console.log(error);
   }
-  
+};
 
-  module.exports = {
-    fetchUser,
-    checkStatus,
-    logout,
-    signup
-  }
+module.exports = {
+  login,
+  checkStatus,
+  logout,
+  signup,
+};

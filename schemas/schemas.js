@@ -1,26 +1,22 @@
+const loginSchema = {
+  type: "object",
+  properties: {
+    password: { type: "string" },
+    email: { type: "string", pattern: "[@]+" },
+  },
+  required: ["password", "email"],
+  additionalProperties: false,
+};
 const signupSchema = {
-    type: "object",
-    properties: {
-      nickname: { type: "string" },
-      firstName: { type: "string" },
-      lastName: { type: "string" },
-      email: { type: "string" },
-      password: { type: "string" },
-      rePassword: { type: "string" },
-    },
-    required: ["firstName","lastName", "email", "password", "rePassword"],
-    additionalProperties: false
-  }
-  
-  
-  const loginSchema = {
-    type: "object",
-    properties: {
-      email: { type: "string" },
-      password: { type: "string" },
-    },
-    required: ["email", "password"],
-    additionalProperties: false
-  }
-  
-  module.exports = {signupSchema, loginSchema}
+  type: "object",
+  properties: {
+    firstName: { type: "string" },
+    lastName: { type: "string" },
+    password: { type: "string" },
+    rePassword: { type: "string" },
+    email: { type: "string", pattern: "[@]+" },
+  },
+  required: ["firstName", "lastName", "password", "rePassword", "email"],
+  additionalProperties: true,
+};
+module.exports = { loginSchema, signupSchema };

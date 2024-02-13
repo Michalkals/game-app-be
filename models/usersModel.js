@@ -1,25 +1,25 @@
-const User = require('../models/User')
+const User = require("../models/User");
+const { encryptPassword, issueJWT } = require("../libs/utilities");
 
-const getUserByEmailModel = async (email) => {
+const getUserByEmail = async (userEmail) => {
+  const user = await User.find({ email: userEmail });
+  return user;
+};
+
+const addUser = async (newUser) => {
+  newUser.password = await encryptPassword(newUser.password);
   try {
-    const user = await User.findOne({ email: email })
-    return user
-  } catch (err) {
-    console.log(err)
+    const user = await User.create(newUser);
+    const jwt = issueJWT(user);
+    return {
+      success: true,
+      user: user,
+      token: jwt.token,
+      expiresIn: jwt.expires,
+    };
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
-
-const addUserModel = async (newUser) => {
-  try {
-    const user = await User.create(newUser)
-    return user
-  } catch (err) {
-    console.log(err)
-  }
-}
-
-
-
-
-module.exports = { getUserByEmailModel, addUserModel }
+module.exports = { getUserByEmail, addUser };

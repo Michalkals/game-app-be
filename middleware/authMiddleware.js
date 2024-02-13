@@ -1,64 +1,50 @@
-const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken')
-require ('dotenv').config()
+const { getUserByEmail } = require("../models/usersModel");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const passwordsMatch = (req, res, next) => {
-  const { password, rePassword } = req.body;
-  if (password === rePassword) {
-    next();
+const passwordMatch = (req, res, next) => {
+  if (req.body.password !== req.body.rePassword) {
+    res.statusCode = 400;
+    res.send({ match: false });
   } else {
-    res.status(400).send("Passwords do not match");
-  }
-};
-
-const isNewUser = async (req, res, next) => {
-  const user = await User.getUserByEmail(req.body.email);
-  if (user) {
-    res.status(400).send("User already exists");
-  } else {
-    next();
-  }
-};
-
-const hashPassword = (req, res, next) => {
-  const saltRounds = 10;
-  bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
-    if (err) {
-      return res.status(500).send("Error encrypting password");
-    }
-    req.body.password = hash;
     delete req.body.rePassword;
+    console.log(req.body);
     next();
-  });
-};
-
-const isExistingUser = async (req, res, next) => {
-  const user = await User.getUserByEmail(req.body.email);
-  if (user) {
-    req.body.user = user
-    next();
-  } else {
-    res.status(400).send("User doesn't exists");
   }
 };
-
+const isNewUser = async (req, res, next) => {
+  try {
+    const user = await getUserByEmail(req.body.email);
+    if (user.length > 0) {
+      res.statusCode = 400;
+      res.send({ userExists: true });
+    } else {
+      next();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const auth = (req, res, next) => {
   const { token } = req.cookies;
   if (!token) {
-    return res.status(401).send('Token required')
+    return res.status(401).send("Token required");
   }
   jwt.verify(token, process.env.TOKEN_SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(401).send('Invalid token')
+      return res.status(401).send("Invalid token");
     } else if (decoded) {
-      req.body.userId = decoded._id
-      req.body.name = decoded.name
-      next()
+      req.body.userId = decoded._id;
+      req.body.name = decoded.name;
+      next();
     } else {
-      res.status(500).send('Error verifying token')
+      res.status(500).send("Error verifying token");
     }
   });
-}
-module.exports = { passwordsMatch, isNewUser, hashPassword, isExistingUser, auth};
+};
+module.exports = {
+  passwordMatch,
+  isNewUser,
+  auth,
+};
