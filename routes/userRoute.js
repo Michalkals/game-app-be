@@ -9,9 +9,9 @@ const {
 const { signupSchema, loginSchema } = require("../schemas/schemas");
 const router = express.Router();
 
-router.get("/log-out", userController.logout);
+router.get("/log-out", userController.logout); // fix it
 
-router.get("/check-status", auth, userController.checkStatus);
+router.get("/check-status", auth, userController.checkStatus); // fix it
 
 router.post(
   "/signup",
@@ -21,10 +21,6 @@ router.post(
   userController.signup
 );
 
-router.post(
-  "/login",
-  validateBody(loginSchema),
-  userController.login
-);
+router.post("/login", validateBody(loginSchema), userController.login);
 
 module.exports = router;
