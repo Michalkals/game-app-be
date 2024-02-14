@@ -9,10 +9,9 @@ const getUserByEmail = async (userEmail) => {
 const addUser = async (newUser) => {
   newUser.password = await encryptPassword(newUser.password);
   try {
-    const user = await User.create(newUser);
+    await User.create(newUser);
     return {
       success: true,
-      ...user
     };
   } catch (error) {
     console.log(error);
@@ -34,9 +33,6 @@ const getAdminStatus = async () => {
   }
 };
 
-const addToGamesPlayed = async () => {
-  console.log(req.body)
-};
 
 
-module.exports = { getUserByEmail, addUser, getAllUsers, addToGamesPlayed, getAdminStatus };
+module.exports = { getUserByEmail, addUser, getAllUsers,  getAdminStatus };

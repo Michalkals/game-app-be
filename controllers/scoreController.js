@@ -3,7 +3,6 @@ const Score = require("../models/scoresModel");
 const addNewScore = async (req, res) => {
   try {
     const { userId, nickname, score } = req.body;
-    console.log(req.body)
     const newScore = await Score.addScore({ userId, nickname, score });
     res.send({ newScore });
   } catch (err) {
@@ -40,7 +39,9 @@ const getLatestScore = async (req, res) => {
 
 const getHighestScore = async (req, res) => {
   try {
-    const highestScore = await Score.highestScore(req.body.nickname);
+    const nickname = req.params.nickname
+    console.log("nickname",nickname)
+    const highestScore = await Score.highestScore(nickname);
     res.send({ highestScore });
   } catch (err) {
     res.status(500).send(err.message);

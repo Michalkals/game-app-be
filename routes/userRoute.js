@@ -27,10 +27,5 @@ router.post(
 
 router.post("/login", validateBody(loginSchema), userController.login);
 
-router.post(
-  "/add-to-games-played",
-  auth,
-  userController.gamesPlayed
-)
 
 module.exports = router;

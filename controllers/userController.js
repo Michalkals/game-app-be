@@ -43,7 +43,6 @@ const login = async (req, res, next) => {
 
 const checkStatus = async (req, res) => {
   try {
-    console.log(req.body.userId)
     const user = await User.findById(req.body.userId);
     if (!user) {
       return res.status(404).json({ success: false, msg: "User not found" });
@@ -57,7 +56,6 @@ const checkStatus = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    console.log(req)
     const { token } = req.cookies;
     if (!token) {
       return res.status(401).json({ success: false, msg: "Token not found" });
@@ -95,13 +93,6 @@ const users = async (req, res) => {
   }
 }
 
-const gamesPlayed = async (req, res) => {
-  try {
-    const addGame = await addToGamesPlayed();
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 const adminStatus = async (req, res) => {
   try {
@@ -118,6 +109,5 @@ module.exports = {
   logout,
   signup,
   users,
-  gamesPlayed,
   adminStatus
 };

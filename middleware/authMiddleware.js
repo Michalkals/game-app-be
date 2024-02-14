@@ -8,7 +8,6 @@ const passwordMatch = (req, res, next) => {
     res.send({ match: false });
   } else {
     delete req.body.rePassword;
-    console.log(req.body);
     next();
   }
 };

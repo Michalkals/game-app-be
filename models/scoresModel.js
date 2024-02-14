@@ -39,10 +39,11 @@ const lastScore = async (nickname) => {
 
 const highestScore = async (nickname) => {
   try {
-    const latestScores = await Score.find({ nickname: nickname }).sort({
-      score: -1,
-    });
-    return latestScores;
+    const latestHighScore = await Score.find({ nickname: nickname })
+                                       .sort({ score: -1, date: -1 })
+                                       .exec();
+console.log("latestHighScore",latestHighScore)
+    return latestHighScore;
   } catch (err) {
     console.log(err);
   }
