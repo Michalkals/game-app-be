@@ -10,12 +10,9 @@ const addUser = async (newUser) => {
   newUser.password = await encryptPassword(newUser.password);
   try {
     const user = await User.create(newUser);
-    const jwt = issueJWT(user);
     return {
       success: true,
-      user: user,
-      token: jwt.token,
-      expiresIn: jwt.expires,
+      ...user
     };
   } catch (error) {
     console.log(error);
