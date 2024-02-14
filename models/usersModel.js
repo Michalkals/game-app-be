@@ -27,9 +27,19 @@ const getAllUsers = async () => {
   return users
 }
 
+const getAdminStatus = async () => {
+  try {
+    const adminUser = await User.findOne({ isAdmin: true });
+    return adminUser;
+  } catch (error) {
+    console.error("Error while fetching admin user: ", error);
+    throw error;
+  }
+};
+
 const addToGamesPlayed = async () => {
   console.log(req.body)
 };
 
 
-module.exports = { getUserByEmail, addUser, getAllUsers, addToGamesPlayed };
+module.exports = { getUserByEmail, addUser, getAllUsers, addToGamesPlayed, getAdminStatus };

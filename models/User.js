@@ -10,6 +10,7 @@ const userSchema = new Schema({
   score: { type: Number, required: true, default: 0 },
   date: { type: Date, default: Date.now },
   gamesPlayed: { type: Number, default: 0 },
+  isAdmin: { type: Boolean, default: false }
 });
 
 const User = mongoose.model("User", userSchema);

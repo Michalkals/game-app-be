@@ -15,6 +15,8 @@ router.get("/check-status", auth, userController.checkStatus); // fix it
 
 router.get("/all-users", userController.users)
 
+router.get("/admin-status", userController.adminStatus)
+
 router.post(
   "/signup",
   validateBody(signupSchema),
