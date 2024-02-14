@@ -43,11 +43,11 @@ const login = async (req, res, next) => {
 
 const checkStatus = async (req, res) => {
   try {
+    console.log(req.body.userId)
     const user = await User.findById(req.body.userId);
     if (!user) {
       return res.status(404).json({ success: false, msg: "User not found" });
     }
-
     res.status(200).json({ success: true, user: user });
   } catch (err) {
     console.error(err);
