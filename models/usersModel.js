@@ -38,7 +38,7 @@ const getAdminStatus = async () => {
 };
 
 const addToGamesPlayed = async () => {
-  console.log(req.body)
+  console.log('games played')
 };
 
 

@@ -1,5 +1,9 @@
 const User = require("../models/User");
-const { addUser, getAllUsers, getAdminStatus } = require("../models/usersModel");
+const {
+  addUser,
+  getAllUsers,
+  getAdminStatus,
+} = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
 const { comparePassword } = require("../libs/utilities");
 require("dotenv").config();
@@ -57,7 +61,6 @@ const checkStatus = async (req, res) => {
 
 const logout = (req, res) => {
   try {
-    console.log(req)
     const { token } = req.cookies;
     if (!token) {
       return res.status(401).json({ success: false, msg: "Token not found" });
@@ -89,28 +92,28 @@ const signup = async (req, res) => {
 const users = async (req, res) => {
   try {
     const allUsers = await getAllUsers();
-    res.send(allUsers)
+    res.send(allUsers);
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 const gamesPlayed = async (req, res) => {
   try {
     const addGame = await addToGamesPlayed();
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 const adminStatus = async (req, res) => {
   try {
     const adminStatus = await getAdminStatus();
-    res.send(adminStatus)
+    res.send(adminStatus);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 module.exports = {
   login,
@@ -119,5 +122,5 @@ module.exports = {
   signup,
   users,
   gamesPlayed,
-  adminStatus
+  adminStatus,
 };
