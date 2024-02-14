@@ -9,6 +9,7 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   score: { type: Number, required: true, default: 0 },
   date: { type: Date, default: Date.now },
+  gamesPlayed: { type: Number, default: 0 },
 });
 
 const User = mongoose.model("User", userSchema);

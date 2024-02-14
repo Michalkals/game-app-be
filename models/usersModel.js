@@ -22,4 +22,14 @@ const addUser = async (newUser) => {
   }
 };
 
-module.exports = { getUserByEmail, addUser };
+const getAllUsers = async () => {
+  const users = await User.find()
+  return users
+}
+
+const addToGamesPlayed = async () => {
+  console.log(req.body)
+};
+
+
+module.exports = { getUserByEmail, addUser, getAllUsers, addToGamesPlayed };
