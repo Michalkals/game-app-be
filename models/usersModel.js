@@ -33,14 +33,6 @@ const getAdminStatus = async () => {
   }
 };
 
-const addToGamesPlayed = async () => {
-  console.log("games played");
-};
 
-module.exports = {
-  getUserByEmail,
-  addUser,
-  getAllUsers,
-  addToGamesPlayed,
-  getAdminStatus,
-};
+
+module.exports = { getUserByEmail, addUser, getAllUsers,  getAdminStatus };

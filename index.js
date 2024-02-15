@@ -18,7 +18,6 @@ app.use("/users", users);
 app.use("/scores", score);
 
 app.use((err, req, res, next) => {
-  console.log(err.message);
   res.status(err.statusCode).send(err.message);
 });
 
